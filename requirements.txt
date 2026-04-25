@@ -1,0 +1,61 @@
+# ===========================================
+# LangChain Core (must come first)
+# ===========================================
+langchain-core
+langchain
+
+# ===========================================
+# LangChain Integrations
+# ===========================================
+langchain-community
+langchain-text-splitters
+langchain-openai
+langchain_huggingface
+langchain_chroma
+langchain-groq  
+langchain-ollama
+langchain-text-splitters
+# ===========================================
+# LangChain Serving & UI
+# ===========================================
+langserve[all]
+streamlit
+
+# ===========================================
+# PDF & Document Processing
+# ===========================================
+pymupdf
+pyPDF
+bs4
+arxiv
+wikipedia
+
+# ===========================================
+# Vector Stores & Embeddings
+# ===========================================
+chromadb
+faiss-cpu
+sentence_transformers
+
+# ===========================================
+# API & Server
+# ===========================================
+fastapi
+uvicorn
+
+# ===========================================
+# Utilities
+# ===========================================
+python-dotenv
+ipykernel
+
+# ===========================================
+# Data Science (existing)
+# ===========================================
+pandas
+pytest
+loguru==0.7.2
+# ===========================================
+# Docker & Cloud
+# ===========================================
+docker
