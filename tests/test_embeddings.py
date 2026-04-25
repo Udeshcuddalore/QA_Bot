@@ -25,8 +25,8 @@ class TestHFEmbeddings:
         result = emb.embed_documents(["text1", "text2"])
         
         assert len(result) == 2
-    
     # Test 3: Embed query
+    
     @patch("src.embeddings.HuggingFaceEmbeddings")
     def test_embed_query(self, mock_hf):
         mock_instance = Mock()
