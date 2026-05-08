@@ -9,10 +9,38 @@ class TestHFEmbeddings:
     """Test cases for HFEmbeddings class."""
     
     # Test 1: Initialize with default model
-    def test_init_default_model(self):
+    @patch("src.embeddings.HuggingFaceEmbeddings")
+    def test_init_default_model(self, mock_hf):
+        mock_instance = Mock()
+        mock_hf.return_value = mock_instance
+        
         emb = HFEmbeddings()
         
         assert emb.model_name == "sentence-transformers/all-MiniLM-L6-v2"
+        assert emb.model_kwargs == {"device": "cpu"}
+        assert emb.encode_kwargs == {"normalize_embeddings": True}
+        # Verify HuggingFaceEmbeddings was called with correct parameters
+        mock_hf.assert_called_once_with(
+            model_name="sentence-transformers/all-MiniLM-L6-v2",
+            model_kwargs={"device": "cpu"},
+            encode_kwargs={"normalize_embeddings": True}
+        )
+    
+    # Test 1b: Initialize with custom device (cuda)
+    @patch("src.embeddings.HuggingFaceEmbeddings")
+    def test_init_with_cuda_device(self, mock_hf):
+        mock_instance = Mock()
+        mock_hf.return_value = mock_instance
+        
+        emb = HFEmbeddings(model_kwargs={"device": "cuda"})
+        
+        assert emb.model_name == "sentence-transformers/all-MiniLM-L6-v2"
+        assert emb.model_kwargs == {"device": "cuda"}
+        mock_hf.assert_called_once_with(
+            model_name="sentence-transformers/all-MiniLM-L6-v2",
+            model_kwargs={"device": "cuda"},
+            encode_kwargs={"normalize_embeddings": True}
+        )
     
     # Test 2: Embed documents
     @patch("src.embeddings.HuggingFaceEmbeddings")
