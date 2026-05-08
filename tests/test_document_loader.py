@@ -56,7 +56,8 @@ class TestDocumentLoader:
         
         loader = DocumentLoader(files)
         
-        with patch("src.document_loader.PyPDFLoader") as mock_loader_class:
+        with patch("src.document_loader.PyMuPDFLoader") as mock_loader_class, \
+             patch("src.document_loader.os.path.exists", return_value=True):
             mock_loader = Mock()
             mock_loader.load.return_value = [Mock()]
             mock_loader_class.return_value = mock_loader
@@ -73,7 +74,8 @@ class TestDocumentLoader:
         
         loader = DocumentLoader(file)
         
-        with patch("src.document_loader.PyPDFLoader") as mock_loader_class:
+        with patch("src.document_loader.PyMuPDFLoader") as mock_loader_class, \
+             patch("src.document_loader.os.path.exists", return_value=True):
             mock_loader = Mock()
             mock_loader.load.side_effect = Exception("Error")
             mock_loader_class.return_value = mock_loader
@@ -89,7 +91,8 @@ class TestDocumentLoader:
         
         loader = DocumentLoader(file)
         
-        with patch("src.document_loader.PyPDFLoader") as mock_loader_class:
+        with patch("src.document_loader.PyMuPDFLoader") as mock_loader_class, \
+             patch("src.document_loader.os.path.exists", return_value=True):
             mock_loader = Mock()
             mock_loader.load.return_value = []
             mock_loader_class.return_value = mock_loader
