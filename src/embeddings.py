@@ -15,7 +15,7 @@ class HFEmbeddings:
         encode_kwargs: dict = None,
     ):
         self.model_name = model_name
-        self.model_kwargs = model_kwargs or {"device": "cpu"}
+        self.model_kwargs = model_kwargs or {"device": "cuda"}
         self.encode_kwargs = encode_kwargs or {"normalize_embeddings": True}
 
         self.embeddings = HuggingFaceEmbeddings(

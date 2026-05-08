@@ -1,46 +1,55 @@
-from langchain_community.document_loaders import PyPDFLoader
+from langchain_community.document_loaders import PyMuPDFLoader
 import os
 from loguru import logger
 
 class DocumentLoader:
     def __init__(self, files):
-        # Ensure it's always a list
+        """
+        Initializes the DocumentLoader.
+        :param files: Can be a single string path, a list of paths, or file-like objects.
+        """
         if not isinstance(files, list):
-            files = [files]
-
-        self.files = files
+            self.files = [files]
+        else:
+            self.files = files
+            
         logger.info(f"Initialized DocumentLoader with {len(self.files)} file(s)")
 
     def PDF_loader(self):
         all_documents = []
 
-        for file in self.files:
+        for file_input in self.files:
             try:
-                logger.debug(f"Processing file: {getattr(file, 'name', 'unknown')}")
+                # 1. Determine the path
+                # If it's a string, use it directly. If it's a Streamlit UploadedFile, use its name.
+                if isinstance(file_input, str):
+                    file_path = file_input
+                elif hasattr(file_input, "name"):
+                    file_path = file_input.name
+                else:
+                    logger.error("Input object has no name attribute and is not a string.")
+                    continue
 
-                if not hasattr(file, "name"):
-                    raise ValueError("Invalid file object")
+                logger.debug(f"Processing file: {file_path}")
 
-                if not file.name.lower().endswith(".pdf"):
-                    raise ValueError(f"Not a PDF: {file.name}")
+                # 2. Validation
+                if not file_path.lower().endswith(".pdf"):
+                    logger.warning(f"Skipping: {file_path} is not a PDF.")
+                    continue
 
-                if isinstance(file.name, str) and not os.path.exists(file.name):
-                    raise FileNotFoundError(f"File not found: {file.name}")
+                if not os.path.exists(file_path):
+                    logger.error(f"File not found on disk: {file_path}")
+                    continue
 
-                loader = PyPDFLoader(file.name)
+                # 3. Loading
+                loader = PyMuPDFLoader(file_path)
                 docs = loader.load()
 
-                logger.info(f"Loaded {len(docs)} documents from {file.name}")
+                logger.info(f"Loaded {len(docs)} pages from {file_path}")
                 all_documents.extend(docs)
 
             except Exception as e:
-                logger.error(
-                    f"Skipping {getattr(file, 'name', 'unknown file')} due to error: {e}"
-                )
+                logger.error(f"Error loading {file_input}: {e}")
 
-        logger.info(f"Total documents loaded: {len(all_documents)}")
+        logger.info(f"Total pages loaded: {len(all_documents)}")
         return all_documents
-
-
-
-    

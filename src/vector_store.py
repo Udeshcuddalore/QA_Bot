@@ -61,5 +61,5 @@ class VectorStoreManager:
             raise ValueError("Vector store not initialized. Call create_store first.")
         
         logger.info(f"Creating retriever (k={k})")
-        return self.vector_store.as_retriever(search_kwargs={"k": k})
+        return self.vector_store.as_retriever()
  
